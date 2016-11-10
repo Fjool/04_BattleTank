@@ -15,6 +15,10 @@ UTankAimingComponent::UTankAimingComponent()
 	// ...
 }
 
+void UTankAimingComponent::SetBarrelReference(UStaticMeshComponent* BarrelToSet)
+{
+	Barrel = BarrelToSet;
+}
 
 // Called when the game starts
 void UTankAimingComponent::BeginPlay()
@@ -37,5 +41,6 @@ void UTankAimingComponent::TickComponent( float DeltaTime, ELevelTick TickType, 
 // respond to aim instructions from the tank
 void UTankAimingComponent::AimAt(FVector HitLocation)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Tank %s aiming at: %s"), *GetParent()->GetName(), *HitLocation.ToString())
+	auto BarrelLocation = Barrel->GetComponentLocation().ToString();
+	UE_LOG(LogTemp, Warning, TEXT("Tank %s aiming at %s from %s"), *GetOwner()->GetName(), *HitLocation.ToString(), *BarrelLocation)
 }
