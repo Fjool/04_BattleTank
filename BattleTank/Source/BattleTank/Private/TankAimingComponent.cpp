@@ -20,24 +20,6 @@ void UTankAimingComponent::SetBarrelReference(UStaticMeshComponent* BarrelToSet)
 	Barrel = BarrelToSet;
 }
 
-// Called when the game starts
-void UTankAimingComponent::BeginPlay()
-{
-	Super::BeginPlay();
-
-	// ...
-	
-}
-
-
-// Called every frame
-void UTankAimingComponent::TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction )
-{
-	Super::TickComponent( DeltaTime, TickType, ThisTickFunction );
-
-	// ...
-}
-
 // respond to aim instructions from the tank
 void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 {
@@ -50,15 +32,28 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 													, Barrel->GetSocketLocation(FName("Projectile"))
 													, HitLocation
 													, LaunchSpeed
-													, false		// use low arc
-													, 0
-													, 0
 													, ESuggestProjVelocityTraceOption::DoNotTrace
 													))
 	{	auto AimDirection = OutLaunchVelocity.GetSafeNormal();
 		auto TankName = GetOwner()->GetName();
 
-		UE_LOG(LogTemp, Warning, TEXT("%s aiming along %s"), *TankName, *AimDirection.ToString())
+		MoveBarrelTowards(AimDirection);
 	}
 
+}
+
+void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
+{
+	auto BarrelRotator = Barrel->GetForwardVector().Rotation();
+	auto AimAsRotator  = AimDirection.Rotation();
+	auto DeltaRotator  = AimAsRotator - BarrelRotator;
+
+	UE_LOG(LogTemp, Warning, TEXT("DeltaRotator: %s"), *DeltaRotator.ToString())
+
+	// find barrel's current aiming vector
+	// work out difference
+
+	// consider frametime 
+	// elevate barrel by Z difference
+	// rotate turret by Y difference
 }
