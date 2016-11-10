@@ -41,6 +41,24 @@ void UTankAimingComponent::TickComponent( float DeltaTime, ELevelTick TickType, 
 // respond to aim instructions from the tank
 void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 {
-	auto BarrelLocation = Barrel->GetComponentLocation().ToString();
-	UE_LOG(LogTemp, Warning, TEXT("Firing at %f"), LaunchSpeed)
+	if (!Barrel) { return; }
+	 
+	FVector OutLaunchVelocity;
+		
+	if (UGameplayStatics::SuggestProjectileVelocity ( this
+													, OutLaunchVelocity
+													, Barrel->GetSocketLocation(FName("Projectile"))
+													, HitLocation
+													, LaunchSpeed
+													, false		// use low arc
+													, 0
+													, 0
+													, ESuggestProjVelocityTraceOption::DoNotTrace
+													))
+	{	auto AimDirection = OutLaunchVelocity.GetSafeNormal();
+		auto TankName = GetOwner()->GetName();
+
+		UE_LOG(LogTemp, Warning, TEXT("%s aiming along %s"), *TankName, *AimDirection.ToString())
+	}
+
 }
