@@ -3,6 +3,8 @@
 #include "BattleTank.h"
 #include "TankPlayerController.h"
 
+#define OUT
+
 ATank* ATankPlayerController::GetControlledTank() const
 {
 	return Cast<ATank>(GetPawn());
@@ -11,9 +13,8 @@ ATank* ATankPlayerController::GetControlledTank() const
 void ATankPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
-	UE_LOG(LogTemp, Warning, TEXT("PlayerController::BeginPlay()"))
 
-		auto ourTank = GetControlledTank();
+	auto ourTank = GetControlledTank();
 
 	if (ourTank)
 	{
@@ -30,24 +31,21 @@ void ATankPlayerController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	AimTowardCrosshair();
-	//UE_LOG(LogTemp, Warning, TEXT("Tick tock"))
 }
 
 void ATankPlayerController::AimTowardCrosshair()
 {
 	if (!GetControlledTank()) { return; }
 
-	FVector HitLocation; // Out parameter
+	OUT FVector HitLocation;
 
 	// Get world location through crosshair
-	if (GetSightRayHitLocation(HitLocation)) // "side-effect"
+	// If it hits landscape
+	if (GetSightRayHitLocation(OUT HitLocation))
 	{
-		
-
-		// If it hits landscape
 		// tell controlled tank to aim at this point
+		GetControlledTank()->AimAt(HitLocation);
 	}
-	UE_LOG(LogTemp, Warning, TEXT("Hit Location: %s"), *HitLocation.ToString())
 }
 
 // Return true if it hits landscape
@@ -66,7 +64,7 @@ bool ATankPlayerController::GetSightRayHitLocation(FVector& HitLocation) const
 	if (GetLookDirection(ScreenLocation, LookDirection))
 	{
 		// Line-trace along that look direction, see what we hit (up to max range)
-		return GetLookVectorHitLocation(LookDirection, HitLocation);
+		return GetLookVectorHitLocation(LookDirection, OUT HitLocation);
 	}
 	else
 	{	return false;
@@ -75,11 +73,11 @@ bool ATankPlayerController::GetSightRayHitLocation(FVector& HitLocation) const
 
 bool ATankPlayerController::GetLookVectorHitLocation(FVector LookDirection, FVector& HitLocation) const
 {
-	FHitResult HitResult;
+	OUT FHitResult HitResult;
 	auto StartLocation = PlayerCameraManager->GetCameraLocation();
 	auto EndLocation   = StartLocation + (LookDirection * LineTraceRange);
 
-	if (GetWorld()->LineTraceSingleByChannel( HitResult
+	if (GetWorld()->LineTraceSingleByChannel( OUT HitResult
 											, StartLocation
 											, EndLocation
 											, ECollisionChannel::ECC_Visibility
