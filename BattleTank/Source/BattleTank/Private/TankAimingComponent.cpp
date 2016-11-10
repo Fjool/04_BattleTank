@@ -1,8 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "BattleTank.h"
-#include "TankAimingComponent.h"
 
+#include "BattleTank.h"
+#include "TankBarrel.h"
+#include "TankAimingComponent.h"
 
 // Sets default values for this component's properties
 UTankAimingComponent::UTankAimingComponent()
@@ -15,15 +16,19 @@ UTankAimingComponent::UTankAimingComponent()
 	// ...
 }
 
-void UTankAimingComponent::SetBarrelReference(UStaticMeshComponent* BarrelToSet)
+void UTankAimingComponent::SetBarrelReference(UTankBarrel* BarrelToSet)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Setting barrel to %s"), *BarrelToSet->GetName())
 	Barrel = BarrelToSet;
 }
 
 // respond to aim instructions from the tank
 void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 {
-	if (!Barrel) { return; }
+	if (!Barrel)
+	{	UE_LOG(LogTemp, Warning, TEXT("No barrel available"))
+		return; 
+	}
 	 
 	FVector OutLaunchVelocity;
 		
@@ -47,13 +52,6 @@ void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 	auto BarrelRotator = Barrel->GetForwardVector().Rotation();
 	auto AimAsRotator  = AimDirection.Rotation();
 	auto DeltaRotator  = AimAsRotator - BarrelRotator;
-
-	UE_LOG(LogTemp, Warning, TEXT("DeltaRotator: %s"), *DeltaRotator.ToString())
-
-	// find barrel's current aiming vector
-	// work out difference
-
-	// consider frametime 
-	// elevate barrel by Z difference
-	// rotate turret by Y difference
+	
+	Barrel->Elevate(5);	// TODO Remove magic number
 }
