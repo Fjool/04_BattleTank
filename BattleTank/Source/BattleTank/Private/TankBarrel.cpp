@@ -11,8 +11,6 @@ void UTankBarrel::Elevate(float RelativeSpeed)
 	// consider frametime 
 
 	// elevate barrel by Z difference
-	// rotate turret by Y difference
-
-	UE_LOG(LogTemp, Warning, TEXT("Elevating %f"), RelativeSpeed)
+	// rotate turret by Y difference	
 }
 

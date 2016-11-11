@@ -2,6 +2,7 @@
 
 #include "BattleTank.h"
 #include "TankPlayerController.h"
+#include "Tank.h"
 
 #define OUT
 
