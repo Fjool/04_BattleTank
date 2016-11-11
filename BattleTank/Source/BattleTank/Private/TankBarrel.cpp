@@ -13,6 +13,6 @@ void UTankBarrel::Elevate(float DegreesPerSecond)
 	// elevate barrel by Z difference
 	// rotate turret by Y difference
 
-	UE_LOG(LogTemp, Warning, TEXT("Elevating %s"), DegreesPerSecond)
+	UE_LOG(LogTemp, Warning, TEXT("Elevating %f"), DegreesPerSecond)
 }
 

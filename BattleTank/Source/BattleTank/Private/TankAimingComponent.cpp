@@ -53,5 +53,10 @@ void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 	auto AimAsRotator  = AimDirection.Rotation();
 	auto DeltaRotator  = AimAsRotator - BarrelRotator;
 	
+	if (!Barrel)
+	{	UE_LOG(LogTemp, Warning, TEXT("NO BARREL"))
+		return;
+	}
+
 	Barrel->Elevate(5);	// TODO Remove magic number
 }
