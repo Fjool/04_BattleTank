@@ -5,12 +5,9 @@
 
 void UTurret::Rotate(float RelativeSpeed)
 {
-	RelativeSpeed = FMath::Clamp(RelativeSpeed, -1.0f, 1.0f);
-
-	float RotationChange = RelativeSpeed * MaxDegreesPerSecond * GetWorld()->DeltaTimeSeconds;
-	float NewRotation = RelativeRotation.Yaw + RotationChange;
-
-	UE_LOG(LogTemp, Warning, TEXT("Rotating turret %f"), NewRotation)
-
-	SetRelativeRotation(FRotator(0, NewRotation, 0));
+	SetRelativeRotation(FRotator( 0
+								, RelativeRotation.Yaw + FMath::Clamp(RelativeSpeed, -1.0f, 1.0f) * MaxDegreesPerSecond * GetWorld()->DeltaTimeSeconds
+								, 0
+								)
+	);
 }
