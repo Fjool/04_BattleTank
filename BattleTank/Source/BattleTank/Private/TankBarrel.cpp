@@ -5,12 +5,13 @@
 
 void UTankBarrel::Elevate(float RelativeSpeed)
 {
-	// find barrel's current aiming vector
-	// work out difference
+	// elevate barrel
+	RelativeSpeed = FMath::Clamp(RelativeSpeed, -1.0f, 1.0f);
 
-	// consider frametime 
+	auto ElevationChange = RelativeSpeed * MaxDegreesPerSecond * GetWorld()->DeltaTimeSeconds;
+	auto NewElevation = FMath::Clamp(RelativeRotation.Pitch + ElevationChange, MinElevation, MaxElevation);
+	
+	SetRelativeRotation(FRotator(NewElevation, 0, 0));
 
-	// elevate barrel by Z difference
-	// rotate turret by Y difference	
+	// rotate turret
 }
-
