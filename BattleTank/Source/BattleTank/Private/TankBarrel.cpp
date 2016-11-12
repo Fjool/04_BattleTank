@@ -5,13 +5,10 @@
 
 void UTankBarrel::Elevate(float RelativeSpeed)
 {
-	// elevate barrel
 	RelativeSpeed = FMath::Clamp(RelativeSpeed, -1.0f, 1.0f);
 
-	auto ElevationChange = RelativeSpeed * MaxDegreesPerSecond * GetWorld()->DeltaTimeSeconds;
-	auto NewElevation = FMath::Clamp(RelativeRotation.Pitch + ElevationChange, MinElevation, MaxElevation);
+	float ElevationChange = RelativeSpeed * MaxDegreesPerSecond * GetWorld()->DeltaTimeSeconds;
+	float NewElevation = FMath::Clamp(RelativeRotation.Pitch + ElevationChange, MinElevation, MaxElevation);
 	
 	SetRelativeRotation(FRotator(NewElevation, 0, 0));
-
-	// rotate turret
 }

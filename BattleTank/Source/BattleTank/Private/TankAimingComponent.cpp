@@ -2,6 +2,7 @@
 
 
 #include "BattleTank.h"
+#include "Turret.h"
 #include "TankBarrel.h"
 #include "TankAimingComponent.h"
 
@@ -22,11 +23,17 @@ void UTankAimingComponent::SetBarrelReference(UTankBarrel* BarrelToSet)
 	Barrel = BarrelToSet;
 }
 
+void UTankAimingComponent::SetTurretReference(UTurret* TurretToSet)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Setting turret to %s"), *TurretToSet->GetName())
+	Turret = TurretToSet;
+}
+
 // respond to aim instructions from the tank
 void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 {
-	if (!Barrel)
-	{	UE_LOG(LogTemp, Warning, TEXT("No barrel available"))
+	if (!Barrel || !Turret)
+	{	UE_LOG(LogTemp, Warning, TEXT("Missing elements of tank aiming system"))
 		return; 
 	}
 	 
@@ -37,31 +44,39 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 													, Barrel->GetSocketLocation(FName("Projectile"))
 													, HitLocation
 													, LaunchSpeed
-													, false
-													, 0
-													, 0
+													, false, 0, 0
 													, ESuggestProjVelocityTraceOption::DoNotTrace
 													))
-	{	MoveBarrelTowards(OutLaunchVelocity.GetSafeNormal());
-		UE_LOG(LogTemp, Warning, TEXT("%f: Solution found"), GetWorld()->GetTimeSeconds())
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("%f: No solution found"), GetWorld()->GetTimeSeconds())
+	{	MoveBarrelTowards(OutLaunchVelocity.GetSafeNormal());	
 	}
 
+	RotateTurretTowards(HitLocation.GetSafeNormal());
 }
 
 void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 {
-	auto BarrelRotator = Barrel->GetForwardVector().Rotation();
-	auto AimAsRotator  = AimDirection.Rotation();
-	auto DeltaRotator  = AimAsRotator - BarrelRotator;
 	
-	if (!Barrel)
-	{	UE_LOG(LogTemp, Warning, TEXT("NO BARREL"))
-		return;
+	if (!Barrel) {	UE_LOG(LogTemp, Warning, TEXT("NO BARREL"))
+					return;
+				 }
+	{	auto BarrelRotator = Barrel->GetForwardVector().Rotation();
+		auto  AimAsRotator = AimDirection.Rotation();
+		auto  DeltaRotator = AimAsRotator - BarrelRotator;
+	
+		Barrel->Elevate(DeltaRotator.Pitch);
 	}
+}
 
-	Barrel->Elevate(DeltaRotator.Pitch);	// TODO Remove magic number
+void UTankAimingComponent::RotateTurretTowards(FVector AimDirection)
+{
+	if (!Turret) { UE_LOG(LogTemp, Warning, TEXT("NO TURRET"))
+				   return;
+				 }
+	else
+	{	auto TurretRotator = Turret->GetForwardVector().Rotation();
+		auto  AimAsRotator = AimDirection.Rotation();
+		auto  DeltaRotator = AimAsRotator - TurretRotator;
+	
+		Turret->Rotate(DeltaRotator.Yaw);
+	}
 }
