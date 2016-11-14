@@ -23,7 +23,7 @@ public:
 
 protected:
 	UTankAimingComponent* TankAimingComponent = nullptr;
-
+	
 private:
 	UPROPERTY(EditAnywhere, Category = Firing) float LaunchSpeed = 4000;
 	UPROPERTY(EditAnywhere, Category = Setup)  TSubclassOf<AProjectile> ProjectileBlueprint = nullptr;
