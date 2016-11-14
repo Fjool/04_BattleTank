@@ -13,17 +13,8 @@ UTankAimingComponent::UTankAimingComponent()
 	PrimaryComponentTick.bCanEverTick = false;
 }
 
-void UTankAimingComponent::SetBarrelReference(UTankBarrel* BarrelToSet)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Setting barrel to %s"), *BarrelToSet->GetName())
-	Barrel = BarrelToSet;
-}
-
-void UTankAimingComponent::SetTurretReference(UTurret* TurretToSet)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Setting turret to %s"), *TurretToSet->GetName())
-	Turret = TurretToSet;
-}
+void UTankAimingComponent::SetBarrelReference(UTankBarrel* BarrelToSet) { Barrel = BarrelToSet; }
+void UTankAimingComponent::SetTurretReference(UTurret*	   TurretToSet) { Turret = TurretToSet; }
 
 // respond to aim instructions from the tank
 void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
