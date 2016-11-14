@@ -26,6 +26,7 @@ protected:
 	
 private:
 	UPROPERTY(EditAnywhere, Category = Firing) float LaunchSpeed = 4000;
+	UPROPERTY(EditAnywhere, Category = Firing) float ReloadTimeInSeconds = 3;
 	UPROPERTY(EditAnywhere, Category = Setup)  TSubclassOf<AProjectile> ProjectileBlueprint = nullptr;
 	
 	UTankBarrel* Barrel = nullptr;	// reference to barrel for spawning
@@ -39,5 +40,5 @@ private:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
 
-
+	double LastFireTime = 0;
 };
