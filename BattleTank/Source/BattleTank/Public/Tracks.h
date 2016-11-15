@@ -11,8 +11,8 @@ class BATTLETANK_API UTracks : public UStaticMeshComponent
 	GENERATED_BODY()
 	
 public:
-	UFUNCTION(BlueprintCallable, Category = Input)
-	void SetThrottle(float Throttle);
-	
-	
+	UFUNCTION(BlueprintCallable, Category = Input) void SetThrottle(float Throttle);
+
+	// Max force per track in newtons
+	UPROPERTY(EditDefaultsOnly)	float TrackMaxDrivingForce = 400000; // 40 tonne tank @ 10m/s accelleration
 };
